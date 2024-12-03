@@ -1,0 +1,107 @@
+/* Основні стилі для body */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+h1 {
+    font-size: 2rem;
+    color: #2d3b34;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Стилі для секцій з питаннями */
+.question {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 15px 0;
+    width: 80%;
+    max-width: 600px;
+    transition: all 0.3s ease;
+}
+
+.question h2 {
+    font-size: 1.25rem;
+    color: #2d3b34;
+    margin-bottom: 10px;
+}
+
+.question label {
+    display: block;
+    margin: 8px 0;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.question input[type="radio"],
+.question input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+/* Стилі для textarea */
+textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+textarea:focus {
+    border-color: #2d3b34;
+    outline: none;
+}
+
+/* Кнопка submit */
+.submit-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.submit-btn:hover {
+    background-color: #45a049;
+}
+
+.submit-btn:active {
+    background-color: #388e3c;
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+    .question {
+        width: 95%;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .submit-btn {
+        font-size: 1rem;
+        padding: 10px 20px;
+    }
+}
