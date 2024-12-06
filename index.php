@@ -1,68 +1,82 @@
 <?php
-require 'content.php';
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
-$oneAnswer = $_SESSION['oneAnswer'];
-$multipleAnswers = $_SESSION['multipleAnswers'];
-$openAnswer = $_SESSION['openAnswer'];
+require_once 'content.php';
+require_once 'contentLoaders.php';
+require_once 'checker.php';
+const MAX_PAGES = 4;
+$_SESSION['page'] = !empty($_SESSION['page']) && $_SESSION['page'] <= MAX_PAGES ? (integer)$_SESSION['page'] : (integer)0;
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
     <title>Тест на знання</title>
 </head>
-    <body>
-
+<body>
+<h1>Тест на знання</h1>
+<form action="" method="POST">
+    <section class="question">
         <?php
-            $tag = 'div';
-            $backgroundColor = '#4CAF50';
-            $color = '#ffffff';
-            $width = '200px';
-            $height = '100px';
-
-            $style = "background-color: $backgroundColor; color: $color; width: $width; height: $height;";
-
-            $htmlElement = "<$tag style=\"$style\">Цей елемент з динамічними стилями</$tag>";
+            if($_SESSION['page'] ==0)
+            {
+                echo loadSingleAnswer();
+            }
+            elseif($_SESSION['page'] ==1)
+            {
+                echo  loadMultipleAnswers();
+            }
+            elseif($_SESSION['page'] ==2)
+            {
+                echo  loadWordAnswer();
+            }
+            elseif($_SESSION['page'] ==3)
+            {
+               echo "Натисніть 'Завершити' щоб побачити результати";
+            }
+            elseif($_SESSION['page'] ==4)
+            {
+                echo showTotal();
+            }
         ?>
-        <div class="container">
-            <?php echo $htmlElement; ?>
-
-            <pre id="output">
-                <?php echo htmlspecialchars($htmlElement); ?>
-            </pre>
-        </div>
-        <h1>Тест на знання</h1>
-
-        <form action="" method="POST">
-
-            <section class="question">
-                <h2><?php echo $oneAnswer->getText(); ?></h2>
-                <?php
-                foreach ($oneAnswer->getAnswers() as $answer) {
-                    echo '<label><input type="radio" name="q1" value="' . $answer->getText() . '">' . $answer->getText() . '</label><br>';
-                }
-                ?>
-            </section>
-
-            <section class="question">
-                <h2><?php echo $multipleAnswers->getText(); ?></h2>
-                <?php
-                foreach ($multipleAnswers->getAnswers() as $answer) {
-                    echo '<label><input type="checkbox" name="q2[]" value="' . $answer->getText() . '">' . $answer->getText() . '</label><br>';
-                }
-                ?>
-            </section>
-
-            <section class="question">
-                <h2><?php echo $openAnswer->getText(); ?></h2>
-                <textarea name="q3" rows="4" cols="50"></textarea>
-            </section>
-
-            <button type="submit" class="submit-btn">Відправити відповіді</button>
-
-        </form>
-
-    </body>
+    </section>
+    <button type="submit" class="submit-btn" style="display: <?php echo $_SESSION['page'] > MAX_PAGES-1 ? 'none' : 'block' ?>">
+        <?php echo $_SESSION['page']==3? "Завершити" : "Далі"  ?>
+    </button>
+</form>
+</body>
 </html>
+
+<?php
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    switch ($_SESSION['page']) {
+        case 1:
+            resetScore();
+            if (!empty($_POST)) {
+                checkRadioQuestions($_POST);
+            }
+            break;
+        case 2:
+            if (!empty($_POST) ) {
+                checkMultipleQuestions($_POST);
+            }
+            break;
+        case 3:
+            if (!empty($_POST)) {
+                checkWordQuestions($_POST);
+            }
+            break;
+    }
+
+    $_SESSION['page']++;
+
+    if ($_SESSION['page'] > MAX_PAGES) {
+        $_SESSION['page'] = 0;
+    }
+}
+?>
