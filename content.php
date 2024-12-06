@@ -1,28 +1,32 @@
 <?php
-    require 'QuestionClass.php';
-    use questions\Question;
-    session_start();
+require_once 'QuestionClass.php';
+require_once 'readQuestions.php';
+use questions\Question;
 
-    $oneAnswer = new Question(
-        'Яке з наступних явищ відображає теорему про відносність Ейнштейна, що стосується часу і швидкості?',
-        array()
-    );
-    $oneAnswer->addAnswer('Парадокс близнюків', true);
-    $oneAnswer->addAnswer('Закон термодинаміки', false);
-    $oneAnswer->addAnswer('Закон Гука',false);
+$questions = readQuestionsFromFile('./questions.txt');
 
-    $multipleAnswers = new Question(
-        'Які з цих концепцій є частиною квантової механіки?',
-        array()
-    );
-    $multipleAnswers->addAnswer('Принцип невизначеності Гейзенберга', true);
-    $multipleAnswers->addAnswer('Закон збереження енергії',false);
-    $multipleAnswers->addAnswer('Квантова суперпозиція', true);
-    $multipleAnswers->addAnswer('Квантова заплутаність', true);
+global $singleAnswer;
+global $multipleAnswers;
+global $wordAnswers;
+global $page;
+$page =1;
 
-    $openAnswer = new Question('Поясніть, як працює блокчейн і чому він є безпечним механізмом для зберігання та передачі даних.', array());
+if(!empty($questions))
+{
+    $singleAnswer = [];
+    $multipleAnswers = [];
+    $wordAnswers = [];
 
-    $_SESSION['oneAnswer'] = $oneAnswer;
-    $_SESSION['multipleAnswers'] = $multipleAnswers;
-    $_SESSION['openAnswer'] = $openAnswer;
-?>
+    foreach ($questions as $question)
+    {
+        if ($question->isWordAnswer()) {
+            $wordAnswers[] = $question;
+        }
+        elseif (!$question->getMultipleCorrect()) {
+            $singleAnswer[] = $question;
+        }
+        else {
+            $multipleAnswers[] = $question;
+        }
+    }
+}
